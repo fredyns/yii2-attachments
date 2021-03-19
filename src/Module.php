@@ -3,6 +3,7 @@
 namespace fredyns\attachments;
 
 use fredyns\attachments\models\File;
+use Yii;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
@@ -73,6 +74,11 @@ class Module extends \yii\base\Module
         return $path;
     }
 
+    public function getS3DirPath($fileHash)
+    {
+        return $this->getSubDirs($fileHash);
+    }
+
     public function getSubDirs($fileHash, $depth = 3)
     {
         $depth = min($depth, 9);
@@ -134,6 +140,13 @@ class Module extends \yii\base\Module
             throw new Exception("Cannot copy file! $filePath  to $newFilePath");
         }
 
+        // copy to s3
+        $s3DirPath = $this->getS3DirPath($fileHash);
+        $s3FilePath = $s3DirPath . DIRECTORY_SEPARATOR . $newFileName;
+        $stream = fopen($filePath, 'r+');
+        \Yii::$app->awss3Fs->write("attachments" . DIRECTORY_SEPARATOR . $s3FilePath, $stream);
+        fclose($stream);
+
         $file = new File();
         $file->name = pathinfo($filePath, PATHINFO_FILENAME);
         $file->model = $this->getShortClass($owner);
@@ -155,9 +168,19 @@ class Module extends \yii\base\Module
     {
         /** @var File $file */
         $file = File::findOne(['id' => $id]);
-        if (empty($file)) return false;
+        if (empty($file)) {
+            return false;
+        }
+
+        // delete file from s3
+        $s3Path = $this->getS3DirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
+        $s3Exists = \Yii::$app->awss3Fs->has("attachments" . DIRECTORY_SEPARATOR . $s3Path);
+        if ($s3Exists) {
+            \Yii::$app->awss3Fs->delete("attachments" . DIRECTORY_SEPARATOR . $filePath);
+        }
+
         $filePath = $this->getFilesDirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
-        
+
         // this is the important part of the override.
         // the original methods doesn't check for file_exists to be 
         return file_exists($filePath) ? unlink($filePath) && $file->delete() : $file->delete();
