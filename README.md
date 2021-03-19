@@ -18,13 +18,13 @@ Installation
 	Either run
 	
 	```
-	php composer.phar require fredyns/yii2-attachments "~1.1.0"
+	php composer.phar require fredyns/yii2-attachments "~1.1.1"
 	```
 	
 	or add
 	
 	```
-	"fredyns/yii2-attachments": "~1.1.0"
+	"fredyns/yii2-attachments": "~1.1.1"
 	```
 	
 	to the require section of your `composer.json` file.
@@ -47,6 +47,29 @@ Installation
 		]
 		...
 	]
+	```
+
+3.  Add S3 component `web.php`
+	
+	```php
+	return [
+	    //...
+	    'components' => [
+		//...
+		'awss3Fs' => [
+		    'class' => 'creocoder\flysystem\AwsS3Filesystem',
+		    'key' => 'your-key',
+		    'secret' => 'your-secret',
+		    'bucket' => 'your-bucket',
+		    'region' => 'your-region',
+		    'endpoint' => 'http://your-region.digitaloceanspaces.com'
+		    // 'version' => 'latest',
+		    // 'baseUrl' => 'your-base-url',
+		    // 'prefix' => 'your-prefix',
+		    // 'options' => [],
+		],
+	    ],
+	];
 	```
 
 3. Apply migrations
