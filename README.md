@@ -1,11 +1,11 @@
 Yii2 attachments
 ================
-[![Latest Stable Version](https://poser.pugx.org/nemmo/yii2-attachments/v/stable)](https://packagist.org/packages/nemmo/yii2-attachments)
-[![License](https://poser.pugx.org/nemmo/yii2-attachments/license)](https://packagist.org/packages/nemmo/yii2-attachments)
-[![Build Status](https://scrutinizer-ci.com/g/Nemmo/yii2-attachments/badges/build.png?b=tests)](https://scrutinizer-ci.com/g/Nemmo/yii2-attachments/build-status/tests)
-[![Code Coverage](https://scrutinizer-ci.com/g/Nemmo/yii2-attachments/badges/coverage.png?b=tests)](https://scrutinizer-ci.com/g/Nemmo/yii2-attachments/?branch=tests)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Nemmo/yii2-attachments/badges/quality-score.png?b=tests)](https://scrutinizer-ci.com/g/Nemmo/yii2-attachments/?branch=tests)
-[![Total Downloads](https://poser.pugx.org/nemmo/yii2-attachments/downloads)](https://packagist.org/packages/nemmo/yii2-attachments)
+[![Latest Stable Version](https://poser.pugx.org/fredyns/yii2-attachments/v/stable)](https://packagist.org/packages/fredyns/yii2-attachments)
+[![License](https://poser.pugx.org/fredyns/yii2-attachments/license)](https://packagist.org/packages/fredyns/yii2-attachments)
+[![Build Status](https://scrutinizer-ci.com/g/fredyns/yii2-attachments/badges/build.png?b=tests)](https://scrutinizer-ci.com/g/fredyns/yii2-attachments/build-status/tests)
+[![Code Coverage](https://scrutinizer-ci.com/g/fredyns/yii2-attachments/badges/coverage.png?b=tests)](https://scrutinizer-ci.com/g/fredyns/yii2-attachments/?branch=tests)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fredyns/yii2-attachments/badges/quality-score.png?b=tests)](https://scrutinizer-ci.com/g/fredyns/yii2-attachments/?branch=tests)
+[![Total Downloads](https://poser.pugx.org/fredyns/yii2-attachments/downloads)](https://packagist.org/packages/fredyns/yii2-attachments)
 
 Extension for file uploading and attaching to the models
 
@@ -21,13 +21,13 @@ Installation
 	Either run
 	
 	```
-	php composer.phar require nemmo/yii2-attachments "~1.0.0"
+	php composer.phar require fredyns/yii2-attachments "~1.0.0"
 	```
 	
 	or add
 	
 	```
-	"nemmo/yii2-attachments": "~1.0.0"
+	"fredyns/yii2-attachments": "~1.0.0"
 	```
 	
 	to the require section of your `composer.json` file.
@@ -38,7 +38,7 @@ Installation
 	'modules' => [
 		...
 		'attachments' => [
-			'class' => nemmo\attachments\Module::className(),
+			'class' => fredyns\attachments\Module::class,
 			'tempPath' => '@app/uploads/temp',
 			'storePath' => '@app/uploads/store',
 			'rules' => [ // Rules according to the FileValidator
@@ -61,7 +61,7 @@ Installation
 		'migrate' => [
 			'class' => 'yii\console\controllers\MigrateController',
 			'migrationNamespaces' => [
-				'nemmo\attachments\migrations',
+				'fredyns\attachments\migrations',
 			],
 		],
 		...
@@ -80,7 +80,7 @@ Installation
 		return [
 			...
 			'fileBehavior' => [
-				'class' => \nemmo\attachments\behaviors\FileBehavior::className()
+				'class' => \fredyns\attachments\behaviors\FileBehavior::class,
 			]
 			...
 		];
@@ -97,7 +97,7 @@ Usage
 1. In the `form.php` of your model add file input
 	
 	```php
-	<?= \nemmo\attachments\components\AttachmentsInput::widget([
+	<?= \fredyns\attachments\components\AttachmentsInput::widget([
 		'id' => 'file-input', // Optional
 		'model' => $model,
 		'options' => [ // Options of the Kartik's FileInput widget
@@ -112,7 +112,7 @@ Usage
 2. Use widget to show all attachments of the model in the `view.php`
 	
 	```php
-	<?= \nemmo\attachments\components\AttachmentsTable::widget([
+	<?= \fredyns\attachments\components\AttachmentsTable::widget([
 		'model' => $model,
 		'showDeleteButton' => false, // Optional. Default value is true
 	])?>
@@ -141,8 +141,8 @@ You may add the following function to your model
     
 ```php
 public function init(){
-    $this->on(\nemmo\attachments\behaviors\FileBehavior::EVENT_AFTER_ATTACH_FILES, function ($event) {
-        /** @var $files \nemmo\attachments\models\File[] */
+    $this->on(\fredyns\attachments\behaviors\FileBehavior::EVENT_AFTER_ATTACH_FILES, function ($event) {
+        /** @var $files \fredyns\attachments\models\File[] */
         $files = $event->files;
         //your custom code
     });
@@ -150,24 +150,3 @@ public function init(){
 }
 ```
     
-Change log
-----------
-
-- **Dec 7, 2016**  - 	Migration namespace coming with Yii 2.0.10. Release 1.0.0-beta.3.
-- **Apr 19, 2016**  - 	Refactoring and testing. Ajax removing. Release 1.0.0-beta.2.
-- **Aug 17, 2015**  - 	Support for prefix on table - you can specify the table name before migrating
-- **Jul 9, 2015**   - 	Fixed automatic submitting form
-- **Jun 19, 2015**  - 	Fixed uploading only files without submitting whole form and submitting form with ignoring upload errors
-- **May 1, 2015**   - 	Fixed uploading when connection is slow or uploading time is long. Now ```onclick``` event on submit button is deprecated
-- **Apr 16, 2015**  - 	Allow users to have a custom behavior class inheriting from FileBehavior.
-- **Apr 4, 2015**   - 	Now all temp uploaded files will be deleted on every new form opened.
-- **Mar 16, 2015**  - 	Fix: error in generating initial preview. Add: Getting path of the attached file by calling ```$file->path```.
-- **Mar 5, 2015**   -   Fix: restrictions for the number of maximum uploaded files.
-- **Mar 4, 2015**   -   Added restrictions for number of maximum uploaded files.
-- **Mar 3, 2015**   -   Fix of the file-input widget id.
-- **Feb 13, 2015**  -	Added restrictions to files (see point 1 in the Usage section), now use ```AttachmentsInput``` widget on the form view	instead of ```FileInput```
-- **Feb 11, 2015**  -	Added preview of uploaded but not saved files and ```tableOptions``` property for widget
-- **Feb 2, 2015**   -   Fix: all attached files will be deleted with the model.
-- **Feb 1, 2015**   -   AJAX or basic upload.
-- **Jan 30, 2015**  -	Several previews of images and other files, fix of required packages.
-- **Jan 29, 2015**  -	First version with basic uploading and previews.

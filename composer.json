@@ -1,5 +1,5 @@
 {
-  "name": "nemmo/yii2-attachments",
+  "name": "fredyns/yii2-attachments",
   "description": "Extension for file uploading and attaching to the models",
   "type": "yii2-extension",
   "keywords": [
@@ -10,12 +10,18 @@
     "upload"
   ],
   "license": "BSD-4-Clause",
-  "homepage": "https://github.com/Nemmo/yii2-attachments",
+  "homepage": "https://github.com/fredyns/yii2-attachments",
   "authors": [
     {
       "name": "Alimzhan Abuov aka Nemmo",
       "email": "alimzhan.abu@yandex.kz",
       "homepage": "http://alimzhan.kz",
+      "role": "Developer"
+    },
+    {
+      "name": "Fredy Nurman Saleh",
+      "email": "email@fredyns.net",
+      "homepage": "http://fredyns.net",
       "role": "Developer"
     }
   ],
@@ -31,7 +37,7 @@
   },
   "autoload": {
     "psr-4": {
-      "nemmo\\attachments\\": "src"
+      "fredyns\\attachments\\": "src"
     }
   },
   "extra": {

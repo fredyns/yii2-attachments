@@ -1,18 +1,18 @@
 <?php
 
-namespace nemmo\attachments\events;
+namespace fredyns\attachments\events;
 
 use yii\base\Event;
 
 class FileEvent extends Event
 {
     /**
-     * @var nemmo\attachments\models\File[]
+     * @var fredyns\attachments\models\File[]
      */
     private $_files;
 
     /**
-     * @return nemmo\attachments\models\File[]
+     * @return fredyns\attachments\models\File[]
      */
     public function getFiles()
     {
@@ -20,7 +20,7 @@ class FileEvent extends Event
     }
 
     /**
-     * @param nemmo\attachments\models\File[] $files
+     * @param fredyns\attachments\models\File[] $files
      */
     public function setFiles($files)
     {

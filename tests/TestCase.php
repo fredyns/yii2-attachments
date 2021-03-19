@@ -52,7 +52,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ],
             'modules' => [
                 'attachments' => [
-                    'class' => \nemmo\attachments\Module::className(),
+                    'class' => \fredyns\attachments\Module::className(),
                 ]
             ],
             'components' => [

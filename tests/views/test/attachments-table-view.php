@@ -10,6 +10,6 @@ use tests\models\Comment;
 
 /** @var $model Comment */
 
-echo \nemmo\attachments\components\AttachmentsTable::widget([
+echo \fredyns\attachments\components\AttachmentsTable::widget([
     'model' => $model
 ]);

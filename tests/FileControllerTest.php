@@ -8,7 +8,7 @@
 
 namespace tests;
 
-use nemmo\attachments\Module;
+use fredyns\attachments\Module;
 use tests\models\Comment;
 use Yii;
 use yii\web\Response;

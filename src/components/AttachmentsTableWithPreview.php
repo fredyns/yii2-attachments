@@ -1,10 +1,10 @@
 <?php
 
-namespace nemmo\attachments\components;
+namespace fredyns\attachments\components;
 
 use himiklab\colorbox\Colorbox;
-use nemmo\attachments\behaviors\FileBehavior;
-use nemmo\attachments\ModuleTrait;
+use fredyns\attachments\behaviors\FileBehavior;
+use fredyns\attachments\ModuleTrait;
 use Yii;
 use yii\bootstrap\Widget;
 use yii\data\ArrayDataProvider;

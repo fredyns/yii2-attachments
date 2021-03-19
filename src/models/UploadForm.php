@@ -1,8 +1,8 @@
 <?php
 
-namespace nemmo\attachments\models;
+namespace fredyns\attachments\models;
 
-use nemmo\attachments\ModuleTrait;
+use fredyns\attachments\ModuleTrait;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;

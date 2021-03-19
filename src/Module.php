@@ -1,8 +1,8 @@
 <?php
 
-namespace nemmo\attachments;
+namespace fredyns\attachments;
 
-use nemmo\attachments\models\File;
+use fredyns\attachments\models\File;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
@@ -10,7 +10,7 @@ use yii\i18n\PhpMessageSource;
 
 class Module extends \yii\base\Module
 {
-    public $controllerNamespace = 'nemmo\attachments\controllers';
+    public $controllerNamespace = 'fredyns\attachments\controllers';
 
     public $storePath = '@app/uploads/store';
 
@@ -35,19 +35,19 @@ class Module extends \yii\base\Module
 
     public function registerTranslations()
     {
-        \Yii::$app->i18n->translations['nemmo/*'] = [
+        \Yii::$app->i18n->translations['fredyns/*'] = [
             'class' => PhpMessageSource::className(),
             'sourceLanguage' => 'en',
-            'basePath' => '@vendor/nemmo/yii2-attachments/src/messages',
+            'basePath' => '@vendor/fredyns/yii2-attachments/src/messages',
             'fileMap' => [
-                'nemmo/attachments' => 'attachments.php'
+                'fredyns/attachments' => 'attachments.php'
             ],
         ];
     }
 
     public static function t($category, $message, $params = [], $language = null)
     {
-        return \Yii::t('nemmo/' . $category, $message, $params, $language);
+        return \Yii::t('fredyns/' . $category, $message, $params, $language);
     }
 
     public function getStorePath()

@@ -8,7 +8,7 @@
 
 namespace tests\models;
 
-use nemmo\attachments\behaviors\FileBehavior;
+use fredyns\attachments\behaviors\FileBehavior;
 use yii\db\ActiveRecord;
 
 /**

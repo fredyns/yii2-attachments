@@ -8,7 +8,7 @@
 
 namespace tests;
 
-use nemmo\attachments\components\AttachmentsTable;
+use fredyns\attachments\components\AttachmentsTable;
 use tests\models\Comment;
 use Yii;
 use yii\db\ActiveRecord;

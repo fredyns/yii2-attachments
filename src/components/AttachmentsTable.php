@@ -1,9 +1,9 @@
 <?php
 
-namespace nemmo\attachments\components;
+namespace fredyns\attachments\components;
 
-use nemmo\attachments\behaviors\FileBehavior;
-use nemmo\attachments\ModuleTrait;
+use fredyns\attachments\behaviors\FileBehavior;
+use fredyns\attachments\ModuleTrait;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\bootstrap\Widget;
