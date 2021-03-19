@@ -1,10 +1,10 @@
-Yii2 attachments
+Yii2 Attachments
 ================
 [![Latest Stable Version](https://poser.pugx.org/fredyns/yii2-attachments/v/stable)](https://packagist.org/packages/fredyns/yii2-attachments)
 [![License](https://poser.pugx.org/fredyns/yii2-attachments/license)](https://packagist.org/packages/fredyns/yii2-attachments)
 [![Total Downloads](https://poser.pugx.org/fredyns/yii2-attachments/downloads)](https://packagist.org/packages/fredyns/yii2-attachments)
 
-Extension for file uploading and attaching to the models
+Upload model's attachment to DigitalOcean Space / S3
 
 Demo
 ----
