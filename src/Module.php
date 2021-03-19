@@ -133,12 +133,13 @@ class Module extends \yii\base\Module
         $fileHash = md5(microtime(true) . $filePath);
         $fileType = pathinfo($filePath, PATHINFO_EXTENSION);
         $newFileName = "$fileHash.$fileType";
-        $fileDirPath = $this->getFilesDirPath($fileHash);
-        $newFilePath = $fileDirPath . DIRECTORY_SEPARATOR . $newFileName;
 
-        if (!copy($filePath, $newFilePath)) {
-            throw new Exception("Cannot copy file! $filePath  to $newFilePath");
-        }
+        // regular file upload disabled
+        // $fileDirPath = $this->getFilesDirPath($fileHash);
+        // $newFilePath = $fileDirPath . DIRECTORY_SEPARATOR . $newFileName;
+        // if (!copy($filePath, $newFilePath)) {
+        //    throw new Exception("Cannot copy file! $filePath  to $newFilePath");
+        // }
 
         // copy to s3
         $s3DirPath = $this->getS3DirPath($fileHash);
@@ -179,10 +180,13 @@ class Module extends \yii\base\Module
             \Yii::$app->awss3Fs->delete("attachments" . DIRECTORY_SEPARATOR . $filePath);
         }
 
-        $filePath = $this->getFilesDirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
+        return $file->delete();
+
+        // regular file delete disabled
+        // $filePath = $this->getFilesDirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
 
         // this is the important part of the override.
         // the original methods doesn't check for file_exists to be 
-        return file_exists($filePath) ? unlink($filePath) && $file->delete() : $file->delete();
+        // return file_exists($filePath) ? unlink($filePath) && $file->delete() : $file->delete();
     }
 }

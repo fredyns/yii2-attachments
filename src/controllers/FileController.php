@@ -8,6 +8,7 @@ use fredyns\attachments\ModuleTrait;
 use Yii;
 use yii\helpers\FileHelper;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
 
@@ -55,14 +56,16 @@ class FileController extends Controller
         $s3Path = $this->getModule()->getS3DirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
         $s3Exists = Yii::$app->awss3Fs->has("attachments" . DIRECTORY_SEPARATOR . $s3Path);
         if ($s3Exists) {
-            $content = Yii::$app->awss3Fs->read("attachments" . DIRECTORY_SEPARATOR . $filePath);
+            $content = Yii::$app->awss3Fs->read("attachments" . DIRECTORY_SEPARATOR . $s3Path);
             return Yii::$app->response->sendContentAsFile($content, "$file->name.$file->type");
         }
 
-        // send regular file instead
-        $filePath = $this->getModule()->getFilesDirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
+        throw new NotFoundHttpException();
 
-        return Yii::$app->response->sendFile($filePath, "$file->name.$file->type");
+        // disable regular file download
+        // $filePath = $this->getModule()->getFilesDirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
+
+        // return Yii::$app->response->sendFile($filePath, "$file->name.$file->type");
     }
 
     public function actionDelete($id)
