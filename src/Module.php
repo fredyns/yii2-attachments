@@ -14,8 +14,6 @@ class Module extends \yii\base\Module
 {
     public $controllerNamespace = 'fredyns\attachments\controllers';
 
-    public $storePath = '@app/uploads/store';
-
     public $tempPath = '@app/uploads/temp';
 
     public $rules = [];
@@ -24,12 +22,14 @@ class Module extends \yii\base\Module
 
     public $filesystem = 'awss3Fs';
 
+    public $directory = null;
+
     public function init()
     {
         parent::init();
 
-        if (empty($this->filesystem) || empty($this->storePath) || empty($this->tempPath)) {
-            throw new Exception('Setup {filesystem}, {storePath} and {tempPath} in module properties');
+        if (empty($this->filesystem)) {
+            throw new Exception('Setup {filesystem} in module properties');
         }
 
         $this->rules = ArrayHelper::merge(['maxFiles' => 3], $this->rules);
@@ -76,46 +76,9 @@ class Module extends \yii\base\Module
         return $this->_flysystem;
     }
 
-    public function getStorePath()
-    {
-        return \Yii::getAlias($this->storePath);
-    }
-
     public function getTempPath()
     {
         return \Yii::getAlias($this->tempPath);
-    }
-
-    /**
-     * @param $fileHash
-     * @return string
-     */
-    public function getFilesDirPath($fileHash)
-    {
-        $path = $this->getStorePath() . DIRECTORY_SEPARATOR . $this->getSubDirs($fileHash);
-
-        FileHelper::createDirectory($path);
-
-        return $path;
-    }
-
-    public function getS3DirPath($fileHash)
-    {
-        return $this->getSubDirs($fileHash);
-    }
-
-    public function getSubDirs($fileHash, $depth = 3)
-    {
-        $depth = min($depth, 9);
-        $path = '';
-
-        for ($i = 0; $i < $depth; $i++) {
-            $folder = substr($fileHash, $i * 3, 2);
-            $path .= $folder;
-            if ($i != $depth - 1) $path .= DIRECTORY_SEPARATOR;
-        }
-
-        return $path;
     }
 
     public function getUserDirPath()
@@ -128,15 +91,6 @@ class Module extends \yii\base\Module
         \Yii::$app->session->close();
 
         return $userDirPath . DIRECTORY_SEPARATOR;
-    }
-
-    public function getShortClass($obj)
-    {
-        $className = get_class($obj);
-        if (preg_match('@\\\\([\w]+)$@', $className, $matches)) {
-            $className = $matches[1];
-        }
-        return $className;
     }
 
     /**
@@ -152,28 +106,16 @@ class Module extends \yii\base\Module
             throw new Exception('Parent model must have ID when you attaching a file');
         }
         if (!file_exists($filePath)) {
-            throw new Exception("File $filePath not exists");
+            throw new Exception("File '{$filePath}' not exists");
         }
 
-        $fileHash = md5(microtime(true) . $filePath);
-        $fileType = pathinfo($filePath, PATHINFO_EXTENSION);
-        $newFileName = "$fileHash.$fileType";
+        // compose record
+        $file = File::compose($owner, $filePath);
 
         // copy to flysystem
-        $s3DirPath = $this->getS3DirPath($fileHash);
-        $s3FilePath = $s3DirPath . DIRECTORY_SEPARATOR . $newFileName;
         $stream = fopen($filePath, 'r+');
-        $this->getFlysystem()->write("attachments" . DIRECTORY_SEPARATOR . $s3FilePath, $stream);
+        $this->getFlysystem()->write($file->getFlyPath(), $stream);
         fclose($stream);
-
-        $file = new File();
-        $file->name = pathinfo($filePath, PATHINFO_FILENAME);
-        $file->model = $this->getShortClass($owner); // saving its class name, not table name
-        $file->itemId = $owner->id;
-        $file->hash = $fileHash;
-        $file->size = filesize($filePath);
-        $file->type = $fileType;
-        $file->mime = FileHelper::getMimeType($filePath);
 
         if ($file->save()) {
             unlink($filePath);
@@ -192,10 +134,9 @@ class Module extends \yii\base\Module
         }
 
         // delete file from s3
-        $s3Path = $this->getS3DirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
-        $s3Exists = $this->getFlysystem()->has("attachments" . DIRECTORY_SEPARATOR . $s3Path);
+        $s3Exists = $this->getFlysystem()->has($file->getFlyPath());
         if ($s3Exists) {
-            $this->getFlysystem()->delete("attachments" . DIRECTORY_SEPARATOR . $s3Path);
+            $this->getFlysystem()->delete($file->getFlyPath());
         }
 
         return $file->delete();

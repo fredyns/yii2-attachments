@@ -9,6 +9,7 @@
 namespace fredyns\attachments\behaviors;
 
 use fredyns\attachments\events\FileEvent;
+use fredyns\attachments\helpers\AttachmentHelper;
 use fredyns\attachments\models\File;
 use fredyns\attachments\ModuleTrait;
 use yii\base\Behavior;
@@ -77,7 +78,7 @@ class FileBehavior extends Behavior
         $fileQuery = File::find()
             ->where([
                 'itemId' => $this->owner->id,
-                'model' => $this->getModule()->getShortClass($this->owner)
+                'model' => AttachmentHelper::getModelLabel($this->owner)
             ]);
         $fileQuery->orderBy(['id' => SORT_ASC]);
 

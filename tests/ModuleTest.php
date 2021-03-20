@@ -33,9 +33,9 @@ class ModuleTest extends TestCase
     {
         Yii::$app->setModule('attachments', [
             'class' => Module::className(),
-            'storePath' => ''
+            'filesystem' => ''
         ]);
-        $this->setExpectedException('Exception', 'Setup {storePath} and {tempPath} in module properties');
+        $this->setExpectedException('Exception', 'Setup {filesystem} in module properties');
         Yii::$app->getModule('attachments');
     }
 

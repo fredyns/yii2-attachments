@@ -50,13 +50,13 @@ class FileController extends Controller
 
     public function actionDownload($id)
     {
+        /* @var $file File */
         $file = File::findOne(['id' => $id]);
 
-        // search in s3 first
-        $s3Path = $this->getModule()->getS3DirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
-        $s3Exists = $this->getModule()->getFlysystem()->has("attachments" . DIRECTORY_SEPARATOR . $s3Path);
+        // search in s3
+        $s3Exists = $this->getModule()->getFlysystem()->has($file->getFlyPath());
         if ($s3Exists) {
-            $content = $this->getModule()->getFlysystem()->read("attachments" . DIRECTORY_SEPARATOR . $s3Path);
+            $content = $this->getModule()->getFlysystem()->read($file->getFlyPath());
             return Yii::$app->response->sendContentAsFile($content, "$file->name.$file->type");
         }
 

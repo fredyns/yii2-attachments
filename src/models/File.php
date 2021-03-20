@@ -2,9 +2,11 @@
 
 namespace fredyns\attachments\models;
 
+use fredyns\attachments\helpers\AttachmentHelper;
 use fredyns\attachments\ModuleTrait;
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\FileHelper;
 use yii\helpers\Url;
 
 /**
@@ -30,7 +32,26 @@ class File extends ActiveRecord
     {
         return Yii::$app->getModule('attachments')->tableName;
     }
-    
+
+    /**
+     * @param ActiveRecord $owner
+     * @param string $filePath
+     * @return File
+     */
+    public static function compose($owner, $filePath)
+    {
+        $file = new static();
+        $file->name = AttachmentHelper::getNewFileName($filePath);
+        $file->model = AttachmentHelper::getModelLabel($owner); // saving its class name, not table name
+        $file->itemId = $owner->id;
+        $file->hash = md5(microtime(true) . $filePath);
+        $file->size = filesize($filePath);
+        $file->type = pathinfo($filePath, PATHINFO_EXTENSION);
+        $file->mime = FileHelper::getMimeType($filePath);
+
+        return $file;
+    }
+
     /**
      * @inheritDoc
      */
@@ -75,8 +96,23 @@ class File extends ActiveRecord
         return Url::to(['/attachments/file/download', 'id' => $this->id]);
     }
 
-    public function getPath()
+    public function getFlyDir()
     {
-        return $this->getModule()->getFilesDirPath($this->hash) . DIRECTORY_SEPARATOR . $this->hash . '.' . $this->type;
+        $dirArray = AttachmentHelper::getModule()->directory ? [AttachmentHelper::getModule()->directory] : [];
+        $dirArray[] = $this->model;
+        $dirArray[] = $this->itemId;
+
+        return implode(DIRECTORY_SEPARATOR, $dirArray);
     }
+
+    public function getFlyPath()
+    {
+        if (empty($this->_flyPath)) {
+            $this->_flyPath = $this->getFlyDir() . DIRECTORY_SEPARATOR . $this->name . '.' . $this->type;
+        }
+
+        return $this->_flyPath;
+    }
+
+    private $_flyPath;
 }
