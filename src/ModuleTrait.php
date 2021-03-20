@@ -8,7 +8,6 @@ namespace fredyns\attachments;
  * Date: 27.01.2015
  * Time: 12:32
  */
-
 trait ModuleTrait
 {
     /**
