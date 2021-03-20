@@ -19,6 +19,7 @@ class m210320_071557_optimize_attachments_index extends Migration
         $table = $this->getModule()->tableName;
         $this->dropIndex("file_model", $table);
         $this->dropIndex("file_item_id", $table);
+        $this->createIndex('attachments_model', $table, ['model', 'itemId']);
     }
 
     /**
@@ -26,7 +27,10 @@ class m210320_071557_optimize_attachments_index extends Migration
      */
     public function safeDown()
     {
-        $this->createIndex('attachments_model', $this->getModule()->tableName, ['model', 'itemId']);
+        $table = $this->getModule()->tableName;
+        $this->dropIndex("attachments_model", $table);
+        $this->createIndex('file_model', $table, ['model']);
+        $this->createIndex('file_item_id', $table, ['itemId']);
     }
 
     /*
