@@ -66,7 +66,7 @@ class Module extends \yii\base\Module
     public function getFlysystem()
     {
         if ($this->_flysystem == null) {
-            $this->_flysystem = \Yii::$app->getModule($this->filesystem);
+            $this->_flysystem = \Yii::$app->{$this->filesystem};
         }
 
         if (!$this->_flysystem) {
