@@ -116,11 +116,10 @@ JS;
                     'buttons' => [
                         'download' => function ($url, $model, $key) {
                             return Html::a('<span class="glyphicon glyphicon-download"></span>',
-                                '#',
+                                ['/attachments/file/download', 'id' => $model->id],
                                 [
                                     'class' => 'download-button',
                                     'title' => Yii::t('yii', 'Download'),
-                                    'data-url' => Url::to(['/attachments/file/download', 'id' => $model->id])
                                 ]
                             );
                         },
