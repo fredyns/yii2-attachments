@@ -24,6 +24,8 @@ class Module extends \yii\base\Module
 
     public $directory = null;
 
+    public $checkAccess = null;
+
     public function init()
     {
         parent::init();
@@ -132,14 +134,8 @@ class Module extends \yii\base\Module
         }
     }
 
-    public function detachFile($id)
+    public function detachFile(File $file)
     {
-        /** @var File $file */
-        $file = File::findOne(['id' => $id]);
-        if (empty($file)) {
-            return false;
-        }
-
         // delete file from s3
         $s3Exists = $this->getFlysystem()->has($file->getFlyPath());
         if ($s3Exists) {

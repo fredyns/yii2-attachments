@@ -65,7 +65,7 @@ class FileBehavior extends Behavior
     public function deleteUploads($event)
     {
         foreach ($this->getFiles() as $file) {
-            $this->getModule()->detachFile($file->id);
+            $this->getModule()->detachFile($file);
         }
     }
 

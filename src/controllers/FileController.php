@@ -6,6 +6,7 @@ use fredyns\attachments\models\File;
 use fredyns\attachments\models\UploadForm;
 use fredyns\attachments\ModuleTrait;
 use Yii;
+use yii\base\Exception;
 use yii\helpers\FileHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -15,6 +16,27 @@ use yii\web\UploadedFile;
 class FileController extends Controller
 {
     use ModuleTrait;
+
+    private function checkAccess(string $action, File $file = null)
+    {
+        // config signature
+        $checkAccess = function ($action, $file) {
+        };
+
+        // get config
+        $checkAccess = $this->getModule()->checkAccess;
+        if (empty($checkAccess)) {
+            return;
+        }
+
+        // prerequisite
+        if (!($checkAccess instanceof \Closure)) {
+            throw new Exception('checkAccess must be an Closure');
+        }
+
+        // run
+        return $checkAccess($action, $file);
+    }
 
     public function actionUpload()
     {
@@ -53,6 +75,8 @@ class FileController extends Controller
         /* @var $file File */
         $file = File::findOne(['id' => $id]);
 
+        $this->checkAccess('download', $file); // any exception will thrown directly
+
         // search in s3
         $s3Exists = $this->getModule()->getFlysystem()->has($file->getFlyPath());
         if ($s3Exists) {
@@ -65,7 +89,15 @@ class FileController extends Controller
 
     public function actionDelete($id)
     {
-        if ($this->getModule()->detachFile($id)) {
+        /* @var File $file */
+        $file = File::findOne(['id' => $id]);
+        if (empty($file)) {
+            return false;
+        }
+
+        $this->checkAccess('delete', $file); // any exception will thrown directly
+
+        if ($this->getModule()->detachFile($file)) {
             return true;
         } else {
             return false;
