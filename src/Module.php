@@ -112,6 +112,13 @@ class Module extends \yii\base\Module
         // compose record
         $file = File::compose($owner, $filePath);
 
+        // ensure unique name
+        $baseName = $file->name;
+        $i = 0;
+        while ($this->getFlysystem()->has($file->getFlyPath())) {
+            $file->name = $baseName . '_' . (++$i);
+        }
+
         // copy to flysystem
         $stream = fopen($filePath, 'r+');
         $this->getFlysystem()->write($file->getFlyPath(), $stream);
