@@ -28,6 +28,8 @@ class AttachmentsTableWithPreview extends Widget
 
     public $tableOptions = ['class' => 'table table-striped table-bordered table-condensed'];
 
+    public $showDownloadButton = true;
+
     public $showDeleteButton = true;
 
     public function init()
@@ -106,9 +108,22 @@ JS;
                 ],
                 [
                     'class' => 'yii\grid\ActionColumn',
-                    'template' => '{delete}',
-                    'visibleButtons' => ['delete' => $this->showDeleteButton],
+                    'template' => '{download} {delete}',
+                    'visibleButtons' => [
+                        'download' => $this->showDownloadButton,
+                        'delete' => $this->showDeleteButton,
+                    ],
                     'buttons' => [
+                        'download' => function ($url, $model, $key) {
+                            return Html::a('<span class="glyphicon glyphicon-download"></span>',
+                                '#',
+                                [
+                                    'class' => 'download-button',
+                                    'title' => Yii::t('yii', 'Download'),
+                                    'data-url' => Url::to(['/attachments/file/download', 'id' => $model->id])
+                                ]
+                            );
+                        },
                         'delete' => function ($url, $model, $key) {
                             return Html::a('<span class="glyphicon glyphicon-trash"></span>',
                                 '#',
@@ -118,7 +133,7 @@ JS;
                                     'data-url' => Url::to(['/attachments/file/delete', 'id' => $model->id])
                                 ]
                             );
-                        }
+                        },
                     ]
                 ],
             ],
